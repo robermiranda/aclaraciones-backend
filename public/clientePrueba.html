@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<title>Aclaraciones</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                <h4>Forma para agregar una aclaración</h4>
+                <h5>Promovente</h5>
+                <input id="p-nombre" type="text" placeholder="Nombre"/><br><br>
+                <input id="p-apellido-paterno" type="text" placeholder="Apellido Paterno"/><br><br>
+                <input id="p-apellido-materno" type="text" placeholder="Apellido Materno"/><br><br>
+                <input id="p-telefono" type="text" placeholder="Telefono"/><br><br>
+                <input id="p-email" type="text" placeholder="Email"/><br><br>
+    
+                <h5>Titular</h5>
+                <input id="t-nombre" type="text" placeholder="Nombre"/><br><br>
+                <input id="t-apellido-paterno" type="text" placeholder="Apellido Paterno"/><br><br>
+                <input id="t-apellido-materno" type="text" placeholder="Apellido Materno"/><br><br>
+
+                <h5>Datos Registrales</h5>
+                <input id="dr-tipo-acto" type="text" placeholder="Tipo Acto: NA | MA | DE"/><br><br>
+                <input id="dr-juzgado" type="text" placeholder="Juzgado"/><br><br>
+                <input id="dr-libro" type="text" placeholder="Libro"/><br><br>
+                <input id="dr-numero-acta" type="text" placeholder="Número de Acta"/><br><br>
+                <input id="dr-anio" type="text" placeholder="Año"/><br><br>
+                <input id="dr-fecha-registro" type="text" placeholder="Fecha Registro"/><br><br>
+
+                <h5>Datos a Aclarar</h5>
+                <input id="da-dato" type="text" placeholder="Dato"/><br><br>
+                <input id="da-dice" type="text" placeholder="Dice"/><br><br>
+                <input id="da-debe-decir" type="text" placeholder="Debe Decir"/><br><br>
+                
+                <button type="button" onclick="addDatoAclarar();">
+                    Agregar Dato
+                </button>
+
+                <button type="button" onclick="postAclaracion()">
+                    Agregar Aclaración
+                </button>
+            </td>
+            <td>
+                <h4>Forma para obtener una aclaración.</h4>
+                <input id="numero-folio" type="text" placeholder="Número de Folio"/><br><br>
+                <button type="button" onclick="getAclaracion()">
+                    Get Aclaración
+                </button>
+
+                <br><hr><br>
+
+                <h4>Forma para obtener la lista de datos a aclarar</h4>
+                <button type="button" onclick="getDatosAclararList()">
+                    Datos Aclarar
+                </button>
+            </td>
+        </tr>
+    </table>
+    <br><hr><br>
+    <p>Mensajes :</p>
+    <p id="msg1"></p>
+    <br><hr><br>
+    
+<script>
+    let i = 0;
+    function consola (msg) {
+        document.getElementById("msg1").innerHTML = `${++i}. ${msg}`;
+    }
+</script>
+<script>
+    const datosAclarar = [];
+
+    function addDatoAclarar () {
+        const datoAgregar = {
+            dato: document.getElementById('da-dato').value,
+            dice: document.getElementById('da-dice').value,
+            debeDecir: document.getElementById('da-debe-decir').value,
+        }
+
+        datosAclarar.push(datoAgregar);
+
+        document.getElementById('da-dato').value = '';
+        document.getElementById('da-dice').value = '';
+        document.getElementById('da-debe-decir').value = '';
+    }
+
+    function postAclaracion () {
+        const promovente = {
+            nombre: document.getElementById('p-nombre').value,
+            apPaterno: document.getElementById('p-apellido-paterno').value,
+            apMaterno: document.getElementById('p-apellido-materno').value,
+            telefono: document.getElementById('p-telefono').value,
+            email: document.getElementById('p-email').value,
+        }
+        const titular = {
+            nombre: document.getElementById('t-nombre').value,
+            apPaterno: document.getElementById('t-apellido-paterno').value,
+            apMaterno: document.getElementById('t-apellido-materno').value,
+        }
+        const datosRegistrales = {
+            tipoActo: document.getElementById('dr-tipo-acto').value,
+            juzgado: document.getElementById('dr-juzgado').value,
+            libro: document.getElementById('dr-libro').value,
+            numeroActa: document.getElementById('dr-numero-acta').value,
+            anio: document.getElementById('dr-anio').value,
+            fechaRegistro: document.getElementById('dr-fecha-registro').value,
+        }
+
+        const aclaracion = {
+            promovente,
+            titular,
+            datosRegistrales,
+            datosAclarar
+        }
+
+        fetch('aclaraciones', {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(aclaracion)
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            if (response.status === 'ok') consola(JSON.stringify(response.data));
+            else consola(response.msg)
+        })
+        .catch(error => consola(`ERROR en la petición de aclaración. ${error}`))
+        .finally(() => {
+            datosAclarar.splice(0, datosAclarar.length);
+        });
+    }
+</script>
+<script>
+    function getAclaracion () {
+        const numeroFolio = document.getElementById('numero-folio').value;
+        const url = numeroFolio ? `/aclaraciones/${numeroFolio}` : '/aclaraciones';
+
+        fetch(url)
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 'ok') consola(JSON.stringify(response.data));
+            else consola(response.msg);
+        })
+        .catch(error => {
+            console.error("ERROR al obtener la aclaración con folio", numeroFolio, error);
+        });
+    }
+</script>
+<script>
+    function getDatosAclararList () {
+        fetch('/datos-aclarar')
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 'ok') consola(JSON.stringify(response.data));
+            else consola(response.msg);
+        })
+        .catch(error =>  consola(error))
+    }
+</script>
+</body>
+</html>
