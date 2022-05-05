@@ -1,10 +1,11 @@
+import insertAclaracion from './api/insertAclaracion';
+import getAllAclaraciones from './api/getAllAclaraciones';
+import getAclaracion from './api/getAclaracion';
 import { TresponseServer,
     Tpromovente,
     Ttitular,
     TdatosRegistrales,
     TdatoAclarar } from '../types/aclaraciones';
-
-import { insertAclaracion, getAllAclaraciones, getAclaracion } from './api';
 
 
 function validaPromovente (promovente: Tpromovente): TresponseServer {
