@@ -3,10 +3,10 @@ import { query } from "express";
 const Pool = require('pg-pool');
 
 export const pool = new Pool({
-    user: 'roberto',
-    host: 'localhost',
-    database: 'aclaraciones',
-    password: 'Roberto50',
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 
