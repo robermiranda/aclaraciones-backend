@@ -5,7 +5,7 @@ import path from 'node:path/posix'
 
 
 const app = express();
-const port: number = 3500;
+const port = 3500;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));

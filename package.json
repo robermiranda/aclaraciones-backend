@@ -4,9 +4,8 @@
   "description": "Backend para el sistema de aclaraciones del RC CDMX",
   "main": "app.ts",
   "scripts": {
-    "lstart": "nodemon app.ts",
-    "start": "ts-node app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --project ./",
+    "start": "node dist/app.js"
   },
   "keywords": [
     "aclaraciones"
@@ -22,7 +21,6 @@
   },
   "dependencies": {
     "express": "^4.17.2",
-    "pg": "^8.7.3",
-    "sqlite3": "^5.0.2"
+    "pg": "^8.7.3"
   }
 }
