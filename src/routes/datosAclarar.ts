@@ -1,11 +1,10 @@
-import express, {Request, Response, Router} from 'express'
-
-const db = require('../db/api_datos_aclarar')
+import express, {Request, Response, Router} from 'express';
+import datosAclarar from '../db/api/datosAclarar';
 
 const router: Router = express.Router()
 
 router.get('/', (req: Request, res: Response) => {
-    db.datosAclarar()
+    datosAclarar()
     .then(response => {
         res.json({
             status: 'ok',
