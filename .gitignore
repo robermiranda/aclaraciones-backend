@@ -1,6 +1,3 @@
 node_modules/
-src/
-app.ts
 package-lock.json
 public/clientePrueba.html
-
