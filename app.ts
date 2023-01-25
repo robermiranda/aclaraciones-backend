@@ -1,7 +1,6 @@
-import express from 'express'
+import express, { application } from 'express'
 import aclaraciones from './src/routes/aclaraciones'
 import datosAclarar from './src/routes/datosAclarar'
-import path from 'node:path/posix'
 
 
 const app = express();
@@ -10,12 +9,11 @@ const PORT = process.env.PORT || 5000
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
+const cors = require('cors');
 
-// Admin paths
-app.use(express.static(path.join(__dirname, 'buildAdmin')))
-app.get('/admin/*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'buildAdmin', 'index.html'));
-})
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
 
 app.use('/aclaraciones', aclaraciones)
 app.use('/datos-aclarar', datosAclarar)
