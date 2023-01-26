@@ -12,7 +12,7 @@ app.use(express.static('public'));
 const cors = require('cors');
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: [process.env.ORIGIN_ADMIN, process.env.ORIGIN_SOLICITUD],
 }));
 
 app.use('/aclaraciones', aclaraciones)
